@@ -123,9 +123,7 @@ public class Customer {
         }
         if (isFound) {
             System.out.println(customerWithTheID.toString(1));
-            System.out.printf(
-                    "%10s+------------+------------+----------------------------------+---------+-----------------------------+-------------------------------------+-------------------------+\n",
-                    "");
+            displayTail();
         } else {
             System.out.printf("%-50sNo Customer with the ID %s Found...!!!\n", " ", ID);
         }
@@ -219,9 +217,7 @@ public class Customer {
             i++;
             Customer c = iterator.next();
             System.out.println(c.toString(i));
-            System.out.printf(
-                    "%10s+------------+------------+----------------------------------+---------+-----------------------------+-------------------------------------+-------------------------+\n",
-                    "");
+            displayTail();
         }
     }
 
@@ -241,6 +237,11 @@ public class Customer {
                 "");
         System.out.println();
 
+    }
+    void displayTail() {
+        System.out.printf(
+                "%10s+------------+------------+----------------------------------+---------+-----------------------------+-------------------------------------+-------------------------+\n",
+                "");
     }
 
     /**
