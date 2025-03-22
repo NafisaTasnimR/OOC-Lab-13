@@ -62,6 +62,11 @@ public class Customer {
      * to enter new email address to get himself register.
      */
     public void addNewCustomer() {
+        Customer customer = readNewCustomerInformation();
+        customerCollection.add(customer);
+    }
+
+    private Customer readNewCustomerInformation() {
         System.out.printf("\n\n\n%60s ++++++++++++++ Welcome to the Customer Registration Portal ++++++++++++++", "");
         Scanner read = new Scanner(System.in);
         System.out.print("\nEnter your name :\t");
@@ -82,7 +87,7 @@ public class Customer {
         String address = read.nextLine();
         System.out.print("Enter your age :\t");
         int age = read.nextInt();
-        customerCollection.add(new Customer(name, email, password, phone, address, age));
+        return new Customer(name,email,password,phone,address,age);
     }
 
     /**
@@ -143,43 +148,55 @@ public class Customer {
     }
 
     public void editUserInfo(String ID) {
-        boolean isFound = false;
-        Scanner read = new Scanner(System.in);
-        for (Customer c : customerCollection) {
-            if (ID.equals(c.getUserID())) {
-                isFound = true;
-                System.out.print("\nEnter the new name of the Passenger:\t");
-                String name = read.nextLine();
-                c.setName(name);
-                System.out.print("Enter the new email address of Passenger " + name + ":\t");
-                c.setEmail(read.nextLine());
-                System.out.print("Enter the new Phone number of Passenger " + name + ":\t");
-                c.setPhone(read.nextLine());
-                System.out.print("Enter the new address of Passenger " + name + ":\t");
-                c.setAddress(read.nextLine());
-                System.out.print("Enter the new age of Passenger " + name + ":\t");
-                c.setAge(read.nextInt());
-                displayCustomersData(false);
-                break;
-            }
-        }
-        if (!isFound) {
+        Customer customer = findCustomerByID(ID);
+        if (customer != null) {
+            readAndUpdateCustomerInfo(customer);
+            displayCustomersData(false);
+        } else {
             System.out.printf("%-50sNo Customer with the ID %s Found...!!!\n", " ", ID);
         }
     }
 
-    public void deleteUser(String ID) {
-        boolean isFound = false;
-        Iterator<Customer> iterator = customerCollection.iterator();
-        while (iterator.hasNext()) {
-            Customer customer = iterator.next();
+    private Customer findCustomerByID(String ID) {
+        for (Customer customer : customerCollection) {
             if (ID.equals(customer.getUserID())) {
-                isFound = true;
-                break;
+                return customer;
             }
         }
-        if (isFound) {
-            iterator.remove();
+        return null;
+    }
+
+    private void readAndUpdateCustomerInfo(Customer c) {
+        Scanner read = new Scanner(System.in);
+
+        System.out.print("\nEnter the new name of the Passenger:\t");
+        c.setName(read.nextLine());
+
+        System.out.print("Enter the new email address of Passenger " + c.getName() + ":\t");
+        c.setEmail(read.nextLine());
+
+        System.out.print("Enter the new Phone number of Passenger " + c.getName() + ":\t");
+        c.setPhone(read.nextLine());
+
+        System.out.print("Enter the new address of Passenger " + c.getName() + ":\t");
+        c.setAddress(read.nextLine());
+
+        System.out.print("Enter the new age of Passenger " + c.getName() + ":\t");
+        c.setAge(read.nextInt());
+
+        read.nextLine();
+    }
+
+    public void deleteUser(String ID) {
+        Iterator<Customer> iterator = customerCollection.iterator();
+        Customer customerToDelete = findCustomerByID(ID);
+        if (customerToDelete != null) {
+            while (iterator.hasNext()) {
+                if (iterator.next().getUserID().equals(ID)) {
+                    iterator.remove();
+                    break;
+                }
+            }
             System.out.printf("\n%-50sPrinting all  Customer's Data after deleting Customer with the ID %s.....!!!!\n",
                     "", ID);
             displayCustomersData(false);
