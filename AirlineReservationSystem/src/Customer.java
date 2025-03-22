@@ -149,21 +149,10 @@ public class Customer {
 
     public void editUserInfo(String ID) {
         boolean isFound = false;
-        Scanner read = new Scanner(System.in);
         for (Customer c : customerCollection) {
             if (ID.equals(c.getUserID())) {
                 isFound = true;
-                System.out.print("\nEnter the new name of the Passenger:\t");
-                String name = read.nextLine();
-                c.setName(name);
-                System.out.print("Enter the new email address of Passenger " + name + ":\t");
-                c.setEmail(read.nextLine());
-                System.out.print("Enter the new Phone number of Passenger " + name + ":\t");
-                c.setPhone(read.nextLine());
-                System.out.print("Enter the new address of Passenger " + name + ":\t");
-                c.setAddress(read.nextLine());
-                System.out.print("Enter the new age of Passenger " + name + ":\t");
-                c.setAge(read.nextInt());
+                readAndUpdateCustomerInfo(c);
                 displayCustomersData(false);
                 break;
             }
@@ -171,6 +160,28 @@ public class Customer {
         if (!isFound) {
             System.out.printf("%-50sNo Customer with the ID %s Found...!!!\n", " ", ID);
         }
+    }
+
+    private void readAndUpdateCustomerInfo(Customer c) {
+        Scanner read = new Scanner(System.in);
+
+        System.out.print("\nEnter the new name of the Passenger:\t");
+        c.setName(read.nextLine());
+
+        System.out.print("Enter the new email address of Passenger " + c.getName() + ":\t");
+        c.setEmail(read.nextLine());
+
+        System.out.print("Enter the new Phone number of Passenger " + c.getName() + ":\t");
+        c.setPhone(read.nextLine());
+
+        System.out.print("Enter the new address of Passenger " + c.getName() + ":\t");
+        c.setAddress(read.nextLine());
+
+        System.out.print("Enter the new age of Passenger " + c.getName() + ":\t");
+        c.setAge(read.nextInt());
+
+        // To prevent input issues when using nextInt() before nextLine()
+        read.nextLine();
     }
 
     public void deleteUser(String ID) {
