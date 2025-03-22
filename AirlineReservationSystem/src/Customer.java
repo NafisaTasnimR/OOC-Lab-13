@@ -148,18 +148,22 @@ public class Customer {
     }
 
     public void editUserInfo(String ID) {
-        boolean isFound = false;
-        for (Customer c : customerCollection) {
-            if (ID.equals(c.getUserID())) {
-                isFound = true;
-                readAndUpdateCustomerInfo(c);
-                displayCustomersData(false);
-                break;
-            }
-        }
-        if (!isFound) {
+        Customer customer = findCustomerByID(ID);
+        if (customer != null) {
+            readAndUpdateCustomerInfo(customer);
+            displayCustomersData(false);
+        } else {
             System.out.printf("%-50sNo Customer with the ID %s Found...!!!\n", " ", ID);
         }
+    }
+
+    private Customer findCustomerByID(String ID) {
+        for (Customer customer : customerCollection) {
+            if (ID.equals(customer.getUserID())) {
+                return customer;
+            }
+        }
+        return null;
     }
 
     private void readAndUpdateCustomerInfo(Customer c) {
@@ -180,22 +184,19 @@ public class Customer {
         System.out.print("Enter the new age of Passenger " + c.getName() + ":\t");
         c.setAge(read.nextInt());
 
-        // To prevent input issues when using nextInt() before nextLine()
         read.nextLine();
     }
 
     public void deleteUser(String ID) {
-        boolean isFound = false;
         Iterator<Customer> iterator = customerCollection.iterator();
-        while (iterator.hasNext()) {
-            Customer customer = iterator.next();
-            if (ID.equals(customer.getUserID())) {
-                isFound = true;
-                break;
+        Customer customerToDelete = findCustomerByID(ID);
+        if (customerToDelete != null) {
+            while (iterator.hasNext()) {
+                if (iterator.next().getUserID().equals(ID)) {
+                    iterator.remove();
+                    break;
+                }
             }
-        }
-        if (isFound) {
-            iterator.remove();
             System.out.printf("\n%-50sPrinting all  Customer's Data after deleting Customer with the ID %s.....!!!!\n",
                     "", ID);
             displayCustomersData(false);
