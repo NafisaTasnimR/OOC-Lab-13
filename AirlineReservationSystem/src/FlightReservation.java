@@ -29,35 +29,52 @@ public class FlightReservation implements DisplayClass {
      * @param userID       userID of the user which is booking the flight
      */
     void bookFlight(String flightNo, int numOfTickets, String userID) {
-        boolean isFound = false;
-        for (Flight f1 : flight.getFlightList()) {
-            if (flightNo.equalsIgnoreCase(f1.getFlightNumber())) {
-                for (Customer customer : Customer.customerCollection) {
-                    if (userID.equals(customer.getUserID())) {
-                        isFound = true;
-                        f1.setNoOfSeatsInTheFlight(f1.getNoOfSeats() - numOfTickets);
-                        if (!f1.isCustomerAlreadyAdded(f1.getListOfRegisteredCustomersInAFlight(), customer)) {
-                            f1.addNewCustomerToFlight(customer);
-                        }
-                        if (isFlightAlreadyAddedToCustomerList(customer.flightsRegisteredByUser, f1)) {
-                            addNumberOfTicketsToAlreadyBookedFlight(customer, numOfTickets);
-                            if (flightIndex(flight.getFlightList(), flight) != -1) {
-                                customer.addExistingFlightToCustomerList(flightIndex(flight.getFlightList(), flight), numOfTickets);
-                            }
-                        } else {
-                            customer.addNewFlightToCustomerList(f1);
-                            addNumberOfTicketsForNewFlight(customer, numOfTickets);
-                        }
-                    break;
-                    }
-                }
+        Flight flight1 = findFlight(flightNo);
+        Customer customer = findCustomerByID(userID);
+
+        if (flight1 == null) {
+            System.out.println("Invalid Flight Number...! No flight with the  ID \"" + flightNo + "\" was found...");
+            return;
+        }
+        if(customer != null) {
+            processBooking(flight1,customer,numOfTickets);
+        }
+
+    }
+
+    private Flight findFlight(String flightNo) {
+        for (Flight f : flight.getFlightList()) {
+            if (flightNo.equalsIgnoreCase(f.getFlightNumber())) {
+                return f;
             }
         }
-        if (!isFound) {
-            System.out.println("Invalid Flight Number...! No flight with the  ID \"" + flightNo + "\" was found...");
-        } else {
-            System.out.printf("\n %50s You've booked %d tickets for Flight \"%5s\"...", "", numOfTickets, flightNo.toUpperCase());
+        return null;
+    }
+
+    private Customer findCustomerByID(String userID) {
+        for (Customer customer : Customer.customerCollection) {
+            if (userID.equals(customer.getUserID())) {
+                return customer;
+            }
         }
+        return null;
+    }
+
+    private void processBooking(Flight flight, Customer customer, int numOfTickets) {
+        flight.setNoOfSeatsInTheFlight(flight.getNoOfSeats() - numOfTickets);
+
+        if (!flight.isCustomerAlreadyAdded(flight.getListOfRegisteredCustomersInAFlight(), customer)) {
+            flight.addNewCustomerToFlight(customer);
+        }
+
+        if (isFlightAlreadyAddedToCustomerList(customer.flightsRegisteredByUser, flight)) {
+            addNumberOfTicketsToAlreadyBookedFlight(customer, numOfTickets);
+        } else {
+            customer.addNewFlightToCustomerList(flight);
+            addNumberOfTicketsForNewFlight(customer, numOfTickets);
+        }
+
+        System.out.printf("\n %50s You've booked %d tickets for Flight \"%5s\"...", "", numOfTickets, flight.getFlightNumber().toUpperCase());
     }
 
     /**
