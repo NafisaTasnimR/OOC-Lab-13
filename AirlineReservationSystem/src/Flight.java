@@ -202,12 +202,12 @@ public class Flight extends FlightDistance {
         final double KNOTS_PER_MILE = 0.8684;
         double theta = lon1 - lon2;
         double distance = radianToDegree(calculateCentralAngle(lat1, lat2, theta));
-        distance = distance * NAUTICAL_MILES_PER_DEGREE * MILES_PER_NAUTICAL_MILE;
+        double distanceInMile = distance * NAUTICAL_MILES_PER_DEGREE * MILES_PER_NAUTICAL_MILE;
         /* On the Zero-Index, distance will be in Miles, on 1st-index, distance will be in KM and on the 2nd index distance will be in KNOTS*/
         String[] distanceString = new String[3];
-        distanceString[0] = String.format("%.2f", distance * KNOTS_PER_MILE);
-        distanceString[1] = String.format("%.2f", distance * KILOMETERS_PER_MILE);
-        distanceString[2] = Double.toString(Math.round(distance * 100.0) / 100.0);
+        distanceString[0] = String.format("%.2f", distanceInMile * KNOTS_PER_MILE);
+        distanceString[1] = String.format("%.2f", distanceInMile * KILOMETERS_PER_MILE);
+        distanceString[2] = Double.toString(Math.round(distanceInMile * 100.0) / 100.0);
         return distanceString;
     }
 
@@ -304,7 +304,7 @@ public class Flight extends FlightDistance {
     }
 
     public List<Flight> getFlightList() {
-        return flightList;
+        return Collections.unmodifiableList(flightList);
     }
 
     public List<Customer> getListOfRegisteredCustomersInAFlight() {
