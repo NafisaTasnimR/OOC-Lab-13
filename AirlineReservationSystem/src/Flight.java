@@ -18,7 +18,7 @@ public class Flight extends FlightDistance {
     private double distanceInKm;
     private String flightTime;
     private int numOfSeatsInTheFlight;
-    private List<Customer> listOfRegisteredCustomersInAFlight;
+    private final List<Customer> listOfRegisteredCustomersInAFlight = new ArrayList<>();
     private int customerIndex;
     private static int nextFlightDay = 0;
     private static final List<Flight> flightList = new ArrayList<>();
@@ -53,7 +53,7 @@ public class Flight extends FlightDistance {
         this.distanceInMiles = Double.parseDouble(distanceBetweenTheCities[0]);
         this.distanceInKm = Double.parseDouble(distanceBetweenTheCities[1]);
         this.flightTime = calculateFlightTime(distanceInMiles);
-        this.listOfRegisteredCustomersInAFlight = new ArrayList<>();
+        //this.listOfRegisteredCustomersInAFlight = new ArrayList<>();
         this.gate = gate;
     }
 
@@ -66,12 +66,15 @@ public class Flight extends FlightDistance {
         RandomGenerator r1 = new RandomGenerator();
         for (int i = 0; i < numOfFlights; i++) {
             String[][] chosenDestinations = r1.randomDestinations();
-            String[] distanceBetweenTheCities = calculateDistance(Double.parseDouble(chosenDestinations[0][1]), Double.parseDouble(chosenDestinations[0][2]), Double.parseDouble(chosenDestinations[1][1]), Double.parseDouble(chosenDestinations[1][2]));
+            String[] distanceBetweenTheCities = calculateDistance(Double.parseDouble(chosenDestinations[0][1]),
+                    Double.parseDouble(chosenDestinations[0][2]), Double.parseDouble(chosenDestinations[1][1]),
+                    Double.parseDouble(chosenDestinations[1][2]));
             String flightSchedule = createNewFlightsAndTime();
             String flightNumber = r1.randomFlightNumbGen(2, 1).toUpperCase();
             int numOfSeatsInTheFlight = r1.randomNumOfSeats();
             String gate = r1.randomFlightNumbGen(1, 30);
-            flightList.add(new Flight(flightSchedule, flightNumber, numOfSeatsInTheFlight, chosenDestinations, distanceBetweenTheCities, gate.toUpperCase()));
+            flightList.add(new Flight(flightSchedule, flightNumber, numOfSeatsInTheFlight, chosenDestinations,
+                    distanceBetweenTheCities, gate.toUpperCase()));
         }
     }
 
@@ -81,7 +84,7 @@ public class Flight extends FlightDistance {
      * @param customer customer to be registered
      */
     void addNewCustomerToFlight(Customer customer) {
-        this.listOfRegisteredCustomersInAFlight.add(customer);
+        listOfRegisteredCustomersInAFlight.add(customer);
     }
 
     /**
@@ -304,7 +307,8 @@ public class Flight extends FlightDistance {
     }
 
     public List<Customer> getListOfRegisteredCustomersInAFlight() {
-        return listOfRegisteredCustomersInAFlight;
+
+        return Collections.unmodifiableList(listOfRegisteredCustomersInAFlight);
     }
 
     public String getFlightSchedule() {
