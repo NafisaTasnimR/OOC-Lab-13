@@ -196,17 +196,25 @@ public class Flight extends FlightDistance {
      */
     @Override
     public String[] calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        final double NAUTICAL_MILES_PER_DEGREE = 60.0;
+        final double MILES_PER_NAUTICAL_MILE = 1.1515;
+        final double KILOMETERS_PER_MILE = 1.609344;
+        final double KNOTS_PER_MILE = 0.8684;
         double theta = lon1 - lon2;
-        double distance = Math.sin(degreeToRadian(lat1)) * Math.sin(degreeToRadian(lat2)) + Math.cos(degreeToRadian(lat1)) * Math.cos(degreeToRadian(lat2)) * Math.cos(degreeToRadian(theta));
-        distance = Math.acos(distance);
-        distance = radianToDegree(distance);
-        distance = distance * 60 * 1.1515;
+        double distance = radianToDegree(calculateCentralAngle(lat1, lat2, theta));
+        distance = distance * NAUTICAL_MILES_PER_DEGREE * MILES_PER_NAUTICAL_MILE;
         /* On the Zero-Index, distance will be in Miles, on 1st-index, distance will be in KM and on the 2nd index distance will be in KNOTS*/
         String[] distanceString = new String[3];
-        distanceString[0] = String.format("%.2f", distance * 0.8684);
-        distanceString[1] = String.format("%.2f", distance * 1.609344);
+        distanceString[0] = String.format("%.2f", distance * KNOTS_PER_MILE);
+        distanceString[1] = String.format("%.2f", distance * KILOMETERS_PER_MILE);
         distanceString[2] = Double.toString(Math.round(distance * 100.0) / 100.0);
         return distanceString;
+    }
+
+    private double calculateCentralAngle(double lat1, double lat2, double theta){
+        double angle = Math.sin(degreeToRadian(lat1)) * Math.sin(degreeToRadian(lat2)) +
+                Math.cos(degreeToRadian(lat1)) * Math.cos(degreeToRadian(lat2)) * Math.cos(degreeToRadian(theta));
+        return Math.acos(angle);
     }
 
     private double degreeToRadian(double deg) {
