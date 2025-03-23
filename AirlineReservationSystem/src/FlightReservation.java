@@ -197,14 +197,13 @@ public class FlightReservation implements DisplayClass {
     public void displayFlightsRegisteredByOneUser(String userID) {
         System.out.println();
         displayFlightScheduleHeader();
-        for (Customer customer : Customer.customerCollection) {
+        Customer customer = findCustomerByID(userID);
+        if(customer != null) {
             List<Flight> f = customer.getFlightsRegisteredByUser();
             int size = customer.getFlightsRegisteredByUser().size();
-            if (userID.equals(customer.getUserID())) {
-                for (int i = 0; i < size; i++) {
-                    System.out.println(toString((i + 1), f.get(i), customer));
-                    System.out.print("+------+-------------------------------------------+-----------+------------------+-----------------------+------------------------+---------------------------+-------------+--------+-----------------+\n");
-                }
+            for (int i = 0; i < size; i++) {
+                System.out.println(toString((i + 1), f.get(i), customer));
+                System.out.print("+------+-------------------------------------------+-----------+------------------+-----------------------+------------------------+---------------------------+-------------+--------+-----------------+\n");
             }
         }
     }
