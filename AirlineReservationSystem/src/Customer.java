@@ -61,33 +61,8 @@ public class Customer {
      * already registered, program will ask the user
      * to enter new email address to get himself register.
      */
-    public void addNewCustomer() {
-        Customer customer = readNewCustomerInformation();
+    public void addNewCustomer(Customer customer) {
         customerCollection.add(customer);
-    }
-
-    private Customer readNewCustomerInformation() {
-        System.out.printf("\n\n\n%60s ++++++++++++++ Welcome to the Customer Registration Portal ++++++++++++++", "");
-        Scanner read = new Scanner(System.in);
-        System.out.print("\nEnter your name :\t");
-        String name = read.nextLine();
-        System.out.print("Enter your email address :\t");
-        String email = read.nextLine();
-        while (isUniqueData(email)) {
-            System.out.println(
-                    "ERROR!!! User with the same email already exists... Use new email or login using the previous credentials....");
-            System.out.print("Enter your email address :\t");
-            email = read.nextLine();
-        }
-        System.out.print("Enter your Password :\t");
-        String password = read.nextLine();
-        System.out.print("Enter your Phone number :\t");
-        String phone = read.nextLine();
-        System.out.print("Enter your address :\t");
-        String address = read.nextLine();
-        System.out.print("Enter your age :\t");
-        int age = read.nextInt();
-        return new Customer(name,email,password,phone,address,age);
     }
 
     /**
@@ -145,10 +120,15 @@ public class Customer {
         return isUnique;
     }
 
-    public void editUserInfo(String ID) {
+    public void editUserInfo(String ID,List<String> details) {
         Customer customer = findCustomerByID(ID);
+
         if (customer != null) {
-            readAndUpdateCustomerInfo(customer);
+            customer.setName(details.get(0));
+            customer.setEmail(details.get(1));
+            customer.setPhone(details.get(2));
+            customer.setAddress(details.get(3));
+            customer.setAge(Integer.parseInt(details.get(4)));
             displayCustomersData(false);
         } else {
             System.out.printf("%-50sNo Customer with the ID %s Found...!!!\n", " ", ID);
@@ -162,27 +142,6 @@ public class Customer {
             }
         }
         return null;
-    }
-
-    private void readAndUpdateCustomerInfo(Customer c) {
-        Scanner read = new Scanner(System.in);
-
-        System.out.print("\nEnter the new name of the Passenger:\t");
-        c.setName(read.nextLine());
-
-        System.out.print("Enter the new email address of Passenger " + c.getName() + ":\t");
-        c.setEmail(read.nextLine());
-
-        System.out.print("Enter the new Phone number of Passenger " + c.getName() + ":\t");
-        c.setPhone(read.nextLine());
-
-        System.out.print("Enter the new address of Passenger " + c.getName() + ":\t");
-        c.setAddress(read.nextLine());
-
-        System.out.print("Enter the new age of Passenger " + c.getName() + ":\t");
-        c.setAge(read.nextInt());
-
-        read.nextLine();
     }
 
     public void deleteUser(String ID) {
