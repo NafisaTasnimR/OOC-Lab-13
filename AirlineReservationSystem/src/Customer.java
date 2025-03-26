@@ -85,39 +85,16 @@ public class Customer {
      * @param ID of the searching/required customer
      */
     public void searchUser(String ID) {
-        boolean isFound = false;
-        Customer customerWithTheID = customerCollection.get(0);
-        for (Customer c : customerCollection) {
-            if (ID.equals(c.getUserID())) {
-                System.out.printf("%-50sCustomer Found...!!!Here is the Full Record...!!!\n\n\n", " ");
-                displayHeader();
-                isFound = true;
-                customerWithTheID = c;
-                break;
-            }
-        }
-        if (isFound) {
-            System.out.println(customerWithTheID.toString(1));
+        Customer customer = findCustomerByID(ID);
+
+        if (customer != null) {
+            System.out.printf("%-50sCustomer Found...!!! Here is the Full Record...!!!\n\n\n", " ");
+            displayHeader();
+            System.out.println(customer.toString(1));
             displayTail();
         } else {
             System.out.printf("%-50sNo Customer with the ID %s Found...!!!\n", " ", ID);
         }
-    }
-
-    /**
-     * Returns true if the given emailID is already registered, false otherwise
-     *
-     * @param emailID to be checked in the list
-     */
-    public boolean isUniqueData(String emailID) {
-        boolean isUnique = false;
-        for (Customer c : customerCollection) {
-            if (emailID.equals(c.getEmail())) {
-                isUnique = true;
-                break;
-            }
-        }
-        return isUnique;
     }
 
     public void editUserInfo(String ID,List<String> details) {
