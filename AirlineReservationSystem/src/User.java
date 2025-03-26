@@ -105,8 +105,8 @@ public class User {
                         desiredOption = read.nextInt();
                         /* If 1 is entered by the privileged user, then add a new customer...... */
                         if (desiredOption == 1) {
-                           
-                            c1.addNewCustomer();
+                            Customer customer = readNewCustomerInformation();
+                            c1.addNewCustomer(customer);
                         } else if (desiredOption == 2) {
                             /*
                              * If 2 is entered by the privileged user, then call the search method of the
@@ -129,7 +129,8 @@ public class User {
                             System.out.print("Enter the CustomerID to Update its Data :\t");
                             String customerID = read1.nextLine();
                             if (customersCollection.size() > 0) {
-                                c1.editUserInfo(customerID);
+                                List<String> customerDetails = readCustomerInfo();
+                                c1.editUserInfo(customerID,customerDetails);
                             } else {
                                 System.out.printf("%-50sNo Customer with the ID %s Found...!!!\n", " ", customerID);
                             }
@@ -254,8 +255,8 @@ public class User {
                             }
                             bookingAndReserving.bookFlight(flightToBeBooked, numOfTickets, result[1]);
                         } else if (desiredChoice == 2) {
-
-                            c1.editUserInfo(result[1]);
+                            List<String> customerDetails = readCustomerInfo();
+                            c1.editUserInfo(result[1],customerDetails);
                         } else if (desiredChoice == 3) {
                             System.out.print(
                                     "Are you sure to delete your account...It's an irreversible action...Enter Y/y to confirm...");
@@ -293,8 +294,8 @@ public class User {
                             "");
                 }
             } else if (desiredOption == 4) {
-
-                c1.addNewCustomer();
+                Customer customer = readNewCustomerInformation();
+                c1.addNewCustomer(customer);
             } else if (desiredOption == 5) {
                 manualInstructions();
             }
@@ -435,7 +436,7 @@ public class User {
         System.out.print("Enter the new age:\t");
         details.add(String.valueOf(read.nextInt()));
 
-        read.nextLine(); // Consume leftover newline
+        read.nextLine();
         return details;
     }
 }
